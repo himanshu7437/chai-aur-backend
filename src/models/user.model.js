@@ -22,7 +22,28 @@ const userSchema = new Schema({
         trim: true,
         index: true
     },
-    avaj
-})
+    avatar: {
+        type: String, // cloudinary url
+        required: true,
+    },
+    coverImage: {
+        type: String,
+    },
+    watchHistory: {
+        type: Schema.Types.ObjectId,
+        ref: "Video"
+    },
+    password: {
+        type: String,
+        required: [true, "Password is required..."]
+    },
+    refreshToken: {
+        type: String,
+    }
+}, 
+{
+    timestamps: true,
+}
+)
 
 export const User = mongoose.model("User", userSchema)
