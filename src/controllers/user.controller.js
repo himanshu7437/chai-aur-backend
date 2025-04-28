@@ -6,6 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 
 
 const registerUser = asyncHandler(async (req, res,) => {
+    
+    // -----> algorithm for register user
     // get user details
     // validation - not empty
     // check if user is already exists: username, email
@@ -19,7 +21,9 @@ const registerUser = asyncHandler(async (req, res,) => {
 
 
     const {fullName, email, username, password } = req.body
-    console.log("email:" , email);
+    // console.log("email:" , email); // for testing
+    // console.log(req.body); // for study
+
 
     if (
         [fullName, email, username, password].
@@ -34,15 +38,23 @@ const registerUser = asyncHandler(async (req, res,) => {
             { email }
         ]
     })
-
+    
+    
     if(existedUser) {
         throw new ApiError(409, "User with email or Username already exists")
     }
-
-
+    
+    
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
-    console.log(coverImageLocalPath);
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // console.log(req.files); // for study
+    
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
+    // console.log(coverImageLocalPath);
+
 
     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
@@ -52,7 +64,7 @@ const registerUser = asyncHandler(async (req, res,) => {
     const coverImage = await uploadOnCLoudinary(coverImageLocalPath);
 
     if(!avatar) {
-        console.log(avatar);
+        // console.log(avatar);
         throw new ApiError(400, "Avatar file is required")
     }
 
